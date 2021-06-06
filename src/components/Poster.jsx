@@ -24,7 +24,13 @@ export default function Poster(props){
   `;
   return(
     <StyledImg>
-      <Image className="image" key={props.id} src={URL_IMG+IMG_SIZE_LARGE+props.path} responsive />
+      <Image className="image" key={props.id} src={URL_IMG+IMG_SIZE_LARGE+props.path} responsive style={{
+        width:"250px",
+        height:"350px",
+        margin:"5px",
+        border:"5px solid #1CB5CB",
+        borderRadius:"10px"
+      }}/>
       {props.info &&
       <Info className="title">
         <h4>{props.title}</h4>

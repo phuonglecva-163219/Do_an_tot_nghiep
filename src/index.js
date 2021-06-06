@@ -10,7 +10,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import App from './App';
 import movieApp from './reducers';
 import './index.css';
-import { MovieContainer, MovieDetail, StarDetail } from './containers';
+import { MovieContainer, MovieDetail, StarDetail, Login } from './containers';
 import { DisplayMsg } from './components';
 
 //const loggerMiddleware = createLogger();
@@ -24,9 +24,11 @@ ReactDOM.render(
     <Router history={history} >
       <Route path="/" component={App}>
         <IndexRoute component={MovieContainer} />
+        {/* <IndexRoute component={Login} /> */}
         <Route path="/movie/:id" component={MovieDetail} />
         <Route path="/star/:id" component={StarDetail} />
         <Route path="/search/:keyword" component={MovieContainer} />
+        <Route path='/recommend/:user_id' component={MovieContainer} />
         <Route path="*" component={DisplayMsg} />
       </Route>
     </Router>

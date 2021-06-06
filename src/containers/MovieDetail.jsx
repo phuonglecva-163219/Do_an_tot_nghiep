@@ -40,7 +40,7 @@ class MovieDetail extends Component {
     }
     if(movie.hasOwnProperty('id')) {
       return(
-        <Grid fluid={false}>
+        <Grid fluid={false} style={{backgroundColor:"black", color:"white", borderRadius:"5px", paddingTop:"20px"}}>
           <Row>
             <Col xs={12} sm={6} md={4}>
               <Poster id={movie.id} path={movie.poster_path} responsive />
@@ -51,7 +51,10 @@ class MovieDetail extends Component {
             </Col>
           </Row>
           <Row>
-            <TrailerList data={trailers.slice(0,TRAILER_MAX_NUM)} />
+            <Col xs={12} sm={6} md={12}>
+             <TrailerList  data={trailers.slice(0,TRAILER_MAX_NUM)} />
+            
+            </Col>
           </Row>
         </Grid>
       );

@@ -1,12 +1,15 @@
 import React, {Component} from 'react'
-import { Navbar, Image } from 'react-bootstrap/lib'
+import { Navbar, Image, Button, Nav } from 'react-bootstrap/lib'
 import TMDBlogo from '../images/themoviedb_green.svg'
+import {Form, FormControl} from 'react-bootstrap'
 import logo from '../images/logo_square.svg'
 import { connect } from 'react-redux'
-import { push } from 'react-router-redux'
+import { push, replace } from 'react-router-redux'
 import Autosuggest from 'react-autosuggest'
 import './search.css'
 import { URL_SEARCH, API_KEY_ALT, URL_IMG, IMG_SIZE_XSMALL} from '../const';
+import {fetch_recommend_movies_for_users, logout} from '../actions'
+import { Link } from 'react-bootstrap/lib/Navbar'
 
 class SearchBar extends Component {
   constructor(props){
@@ -33,7 +36,14 @@ class SearchBar extends Component {
     this.props.dispatch(push('/search/'+ searchText));
     this.setState({ value: ''});
   }
-
+  handleRecommend = async ()=>{
+    const {userDetail, dispatch} = this.props
+    // const data = await fetch('http://localhost:5000/api/users/'+userDetail.id+'/recommend/'+ num_movies)
+    // .then(data=>data.json())
+    dispatch(fetch_recommend_movies_for_users(userDetail.id))
+    dispatch(replace('recommend/' + userDetail.id))
+    // console.log(data)
+  }
 
   getSuggestionValue = (suggestion) => {
     return suggestion.title;
@@ -73,7 +83,12 @@ class SearchBar extends Component {
       suggestions: []
     });
   };
-
+  handleLogout = ()=>{
+    console.log(this.props)
+    this.props.dispatch(logout())
+    localStorage.clear()
+    this.props.dispatch(replace('/'))
+  }
   renderSuggestion = (suggestion) => {
     return (
       <div>
@@ -100,7 +115,8 @@ class SearchBar extends Component {
     fontWeight: 'bold',
     textTransform: 'caplitalize',
     paddingLeft: 10,
-    fontSize: '1.2em'
+    fontSize: '1.2em',
+    fontFamily: "fantasy"
   };
 
   const imgStyle = {
@@ -118,16 +134,28 @@ class SearchBar extends Component {
     onKeyPress: this.handleKeyDown,
     placeholder: 'Search Movie Title...'
   };
-
+  
   return (
     <Navbar bsStyle='inverse'>
       <Navbar.Header>
         <Navbar.Brand>
-          <a href="#/"><span style={brandStyle}>{this.props.brand}</span><Image style={imgStyle} src={TMDBlogo}/></a>
+          <a href="#/"><span style={brandStyle}>{this.props.brand}</span>
+          {/* <Image style={imgStyle} src={TMDBlogo}/> */}
+          </a>
+          <Link onClick={()=>this.handleRecommend()} style={{
+            color:"white",
+            fontWeight:"lighter",
+            display:"inline",
+            paddingLeft:"20px",
+            cursor:"pointer",
+
+            fontFamily: "fantasy"
+          }}>Recommend</Link>
         </Navbar.Brand>
       </Navbar.Header>
-      <Navbar.Form pullRight>
-        <Autosuggest
+
+      <Form  inline> 
+        <Autosuggest className='mr-sm-2'
           suggestions={suggestions}
           onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
           onSuggestionSelected={this.onSuggestionSelected}
@@ -135,11 +163,24 @@ class SearchBar extends Component {
           getSuggestionValue={this.getSuggestionValue}
           renderSuggestion={this.renderSuggestion}
           inputProps={inputProps} />
-      </Navbar.Form>
+        <Link onClick={()=> this.handleLogout()} style={{
+          color:"white",
+          fontWeight:"bolder",
+          marginLeft:"20px",
+          cursor:"pointer",
+          fontWeight:"lighter",
+          fontFamily: "fantasy"
+
+        }}>Log out</Link>
+        </Form>
+
     </Navbar>
   );
 
   }
 }
-
-export default connect()(SearchBar);
+const mapStateToProps = (state) => {
+  const {userDetail, recommend_movieList} = state
+  return {userDetail,recommend_movieList}
+}
+export default connect(mapStateToProps)(SearchBar);

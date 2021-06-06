@@ -5,24 +5,26 @@ import { Col } from 'react-bootstrap'
 export default function TrailerList({data}) {
     let trailers = data.map(function(trailer) {
       return(
-        <Col xs={12} sm={6} md={4} key={trailer.id} >
+        <Col className="md-auto" key={trailer.id} >
           <Trailer trailer={trailer.key} />
         </Col>
       );
     });
 
     const style = {
-      marginTop: '15px'
+      marginTop: '15px',
     };
 
     const titleStyle = {
-      paddingLeft: '20px'
+      paddingLeft: '20px',
+      width:"100%"
     };
 
     if (trailers.length !== 0){
       return(
-        <div>
+        <div style={{paddingTop:"20px", textAlign:"center"}}>
           <h3 style={titleStyle}>Trailers</h3>
+          <hr />
           <div style={style}>{trailers}</div>
         </div>
       );
